@@ -16,12 +16,6 @@
 
 import { EventTarget, Event } from 'event-target-shim';
 
-declare global {
-  interface WebSocket {
-    sockId: number;
-  }
-}
-
 type SocketEventMap = {
   connecting: Event<'connecting'>;
   connected: Event<'connected'>;
@@ -70,6 +64,7 @@ export default class Socket extends EventTarget<SocketEventMap> {
   #hasConnectedOnce = false;
   #hasFlaggedConnErr = false;
   #tries = 0;
+  #id = Socket.#genId.next().value;
 
   constructor(
     url: string,
@@ -110,9 +105,7 @@ export default class Socket extends EventTarget<SocketEventMap> {
       this.state = Socket.CONNECTING;
     }
 
-    const id = Socket.#genId.next().value;
-
-    this.url.searchParams.append('sockId', String(id));
+    this.url.searchParams.append('sockId', String(this.#id));
 
     let socket;
 
@@ -124,7 +117,6 @@ export default class Socket extends EventTarget<SocketEventMap> {
       socket = new WebSocket(this.url.href);
     }
 
-    socket.sockId = id;
     socket.onmessage = this.#onmessage.bind(this);
     socket.onopen = this.#opened.bind(this);
     socket.onerror = this.#errored.bind(this);
@@ -136,9 +128,7 @@ export default class Socket extends EventTarget<SocketEventMap> {
     this.dispatchEvent(new Event(SOCK_EVENT_MAP.CONNECTING));
   }
 
-  send(
-    data: string | ArrayBufferLike | Blob | ArrayBufferView<ArrayBufferLike>,
-  ) {
+  send(data: string | ArrayBufferLike | Blob | ArrayBufferView) {
     if (this.#socket && this.state === Socket.OPEN) {
       this.#socket.send(data);
 
@@ -197,10 +187,7 @@ export default class Socket extends EventTarget<SocketEventMap> {
   }
 
   get sockId() {
-    if (this.#socket) {
-      return this.#socket.sockId;
-    }
-    return 0;
+    return this.#id;
   }
 
   isConnected() {

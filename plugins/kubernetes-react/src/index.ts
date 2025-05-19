@@ -28,3 +28,4 @@ export * from './api';
 export * from './kubernetes-auth-provider';
 export * from './components';
 export * from './types';
+export { default as Socket } from './utils/socket';
