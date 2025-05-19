@@ -29,7 +29,7 @@ import {
 import { stringifyEntityRef } from '@backstage/catalog-model';
 import { KubernetesAuthProvidersApi } from '../kubernetes-auth-provider';
 import { NotFoundError } from '@backstage/errors';
-import Socket from '../utils/socket';
+import { Socket } from '../utils/socket';
 
 /** @public */
 export class KubernetesBackendClient implements KubernetesApi {

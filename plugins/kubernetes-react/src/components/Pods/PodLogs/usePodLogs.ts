@@ -18,7 +18,7 @@ import { useEffect, useState, useRef } from 'react';
 import { ContainerScope } from './types';
 import { useApi } from '@backstage/core-plugin-api';
 import { kubernetesProxyApiRef } from '../../../api/types';
-import Socket from '../../../utils/socket';
+import { Socket } from '../../../utils/socket';
 
 /**
  * Arguments for usePodLogs
@@ -56,7 +56,7 @@ export const usePodLogs = ({ containerScope, previous }: PodLogsOptions) => {
         previous,
       });
 
-      sock.addEventListener('message', e => {
+      sock.addEventListener('message', (e: MessageEvent) => {
         const { data } = e;
         data.text().then((txt: string) => {
           setStream(prev => ({ ...prev, logs: `${prev.logs}\n${txt}` }));

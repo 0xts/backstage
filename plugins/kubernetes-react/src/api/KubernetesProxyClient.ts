@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Socket from '../utils/socket';
+import { Socket } from '../utils/socket';
 import { KubernetesApi } from './types';
 import { Event } from 'kubernetes-models/v1';
 

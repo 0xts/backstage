@@ -23,7 +23,7 @@ import {
 import { createApiRef } from '@backstage/core-plugin-api';
 import { Event } from 'kubernetes-models/v1';
 import { JsonObject } from '@backstage/types';
-import Socket from '../utils/socket';
+import { Socket } from '../utils/socket';
 
 /** @public */
 export const kubernetesApiRef = createApiRef<KubernetesApi>({

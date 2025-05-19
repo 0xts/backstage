@@ -15,16 +15,11 @@
  */
 
 import { EventTarget, Event } from 'event-target-shim';
+import type { SocketEventMap } from '../types';
 
-type SocketEventMap = {
-  connecting: Event<'connecting'>;
-  connected: Event<'connected'>;
-  disconnected: Event<'disconnected'> & CloseEvent;
-  message: Event<'message'> & MessageEvent;
-  connect_error: Event<'connect_error'>;
-  disconnect_error: Event<'disconnect_error'>;
-};
-
+/**
+ * @public
+ */
 export const SOCK_EVENT_MAP = {
   CONNECT_ERROR: 'connect_error',
   CONNECTED: 'connected',
@@ -34,7 +29,10 @@ export const SOCK_EVENT_MAP = {
   MESSAGE: 'message',
 } as const;
 
-export default class Socket extends EventTarget<SocketEventMap> {
+/**
+ * @public
+ */
+export class Socket extends EventTarget<SocketEventMap> {
   static CONNECTING = 0 as const;
   static OPEN = 1 as const;
   static CLOSING = 2 as const;
