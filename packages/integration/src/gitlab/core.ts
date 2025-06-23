@@ -15,6 +15,7 @@
  */
 
 import fetch from 'cross-fetch';
+import { NotFoundError } from '@backstage/errors';
 import {
   getGitLabIntegrationRelativePath,
   GitLabIntegrationConfig,
@@ -149,6 +150,12 @@ export async function getProjectId(
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 404) {
+        // When the project isn't found, the body contains `message`
+        throw new NotFoundError(
+          `GitLab Error '${response.statusText}', ${data.message}`,
+        );
+      }
       throw new Error(
         `GitLab Error '${data.error}', ${data.error_description}`,
       );
@@ -156,6 +163,9 @@ export async function getProjectId(
 
     return Number(data.id);
   } catch (e) {
+    if (e instanceof NotFoundError) {
+      throw e;
+    }
     throw new Error(`Could not get GitLab project ID for: ${target}, ${e}`);
   }
 }
